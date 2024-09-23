@@ -57,7 +57,7 @@ const state = {
 
 const allItems = document.querySelector(".store--item-list")
 const cartItems = document.querySelector(".cart--item-list")
-let cost = document.querySelector(".total-number")
+let totalCost = document.querySelector(".total-number")
 
 function renderCart() {
   cartItems.innerHTML = ''
@@ -127,6 +127,8 @@ function addToCart(item) {
   cartLi.appendChild(quantitySpan)
   cartLi.appendChild(addButton)
 
+  increaseCost(item.id)
+
 
   cartItems.appendChild(cartLi)
 }
@@ -136,6 +138,8 @@ function increaseItem(id){
   const quantitySpan = cartLi.querySelector('.quantity-text')
 
   quantitySpan.innerHTML = parseInt(quantitySpan.innerHTML) + 1;
+  console.log(id)
+  increaseCost(id)
 }
 
 function decreaseItem(id){
@@ -146,17 +150,51 @@ function decreaseItem(id){
   
   if(currentQuantity > 1){
     quantitySpan.innerHTML = currentQuantity - 1
+    decreaseCost(id)
   }
   else {
     cartItems.removeChild(cartLi)
+    decreaseCost(id)
 
     renderCart()
   }
 }
 
+//Id of product in state
+function increaseCost(id){
+  for(let i = 0; i < state.items.length; i++){
+    const item = state.items[i]
+
+    if(item.id === id){
+      let currentCost = parseFloat(totalCost.innerHTML)
+      let newCost = currentCost + item.price
+      
+      
+      totalCost.innerText = newCost.toFixed(2)
+      console.log(totalCost.innerHTML)
+    }
+  }
+}
+
+function decreaseCost(id){
+  for(let i = 0; i < state.items.length; i++){
+    const item = state.items[i]
+
+    if(item.id === id){
+      let currentCost = parseFloat(totalCost.innerHTML)
+      let newCost = currentCost - item.price
+      
+      
+      totalCost.innerText = newCost.toFixed(2)
+      console.log(totalCost.innerHTML)
+    }
+  }
+}
 
 function main() {
     renderItems()
+    totalCost.innerText = 0
+    console.log(totalCost)
 }
 
 main()
