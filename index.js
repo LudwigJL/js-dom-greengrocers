@@ -57,6 +57,7 @@ const state = {
 
 const allItems = document.querySelector(".store--item-list")
 const cartItems = document.querySelector(".cart--item-list")
+let cost = document.querySelector(".total-number")
 
 function renderCart() {
   cartItems.innerHTML = ''
@@ -68,7 +69,6 @@ function renderCart() {
     allItems.appendChild(itemLi)
 
   }
-
 }
 
 function renderItems() {
@@ -101,7 +101,7 @@ function renderItems() {
 function addToCart(item) {
   const cartLi = document.createElement('li')
 
-  cartLi.setAttribute('id', item.id)
+  cartLi.setAttribute('id', 'cart-' + item.id)
 
   //Create image
   let image = document.createElement('img')
@@ -110,7 +110,7 @@ function addToCart(item) {
   //Create removeButton
   let removeButton = document.createElement('button')
   removeButton.className = 'quantity-btn remove-btn center'
-  removeButton.onclick = () => removeFromCart(item.id)
+  removeButton.onclick = () => decreaseItem(item.id)
 
   //Create quantitySpan
   let quantitySpan = document.createElement('span')
@@ -120,7 +120,7 @@ function addToCart(item) {
   //Create addButton
   let addButton = document.createElement('button')
   addButton.className = 'quantity-btn add-btn center'
-  addButton.onclick = () => quantitySpan.innerHTML++;
+  addButton.onclick = () => increaseItem(item.id);
 
   cartLi.appendChild(image)
   cartLi.appendChild(removeButton)
@@ -131,31 +131,32 @@ function addToCart(item) {
   cartItems.appendChild(cartLi)
 }
 
-function addToCart(id){
-  const cartLi = document.getElementById(id)
+function increaseItem(id){
+  const cartLi = document.getElementById('cart-' + id)
   const quantitySpan = cartLi.querySelector('.quantity-text')
 
-  //quantitySpan ++;
+  quantitySpan.innerHTML = parseInt(quantitySpan.innerHTML) + 1;
+}
 
+function decreaseItem(id){
+  const cartLi = document.getElementById('cart-' + id)
+  const quantitySpan = cartLi.querySelector('.quantity-text')
 
+  let currentQuantity = parseInt(quantitySpan.innerHTML);
   
+  if(currentQuantity > 1){
+    quantitySpan.innerHTML = currentQuantity - 1
+  }
+  else {
+    cartItems.removeChild(cartLi)
+
+    renderCart()
+  }
 }
 
-function removeFromCart(id){
-  const cartLi = document.getElementById(id)
-  const quantitySpan = cartLi.querySelector('.quantity-text')
-  console.log(quantitySpan.innerHTML)
-
-  //if quantityspan > 1 just --
-
-
-  allItems.removeChild(cartLi)
-  renderCart();
-}
 
 function main() {
     renderItems()
-    renderCart()
 }
 
 main()
