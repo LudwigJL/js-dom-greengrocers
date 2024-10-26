@@ -65,6 +65,8 @@ const state = {
   cart: []
 };
 
+
+
 const allItems = document.querySelector(".store--item-list")
 const cartItems = document.querySelector(".cart--item-list")
 let totalCost = document.querySelector(".total-number")
@@ -89,21 +91,44 @@ showVegetables.addEventListener('change', function(e){
   }
 })
 
+const sortAlphabetically = document.querySelector('#sortAlpha');
+sortAlphabetically.addEventListener('change', function(e){
+  if(sortAlphabetically.checked){    
+
+    const sortedArray = state.cart.sort((a, b) => {
+      const nameA = a.getAttribute('name');
+      const nameB = b.getAttribute('name');
+
+      return nameA.localeCompare(nameB);      
+    });
+
+    console.log(sortedArray);
+
+    renderCart(sortedArray);
+
+  }
+  else{
+    console.log(state.cart);
+
+    renderCart(state.cart);
+    }
+})
+
+
 
 function filterItems(filterString, completeList){
   const filteredList = completeList.filter(item => item.type === filterString);
   renderItems(filteredList);
 }
 
-function renderCart() {
+function renderCart(cartList) {
   cartItems.innerHTML = ''
+  for(let i = 0; i < cartList.length; i++){
+    const itemLi = document.createElement('li');
+    const item = cartList[i];
 
-  for(let i = 0; i < state.cart.length; i++){
-    const item = state.cart[i]
-    const itemLi = document.createElement('li')
-
-    allItems.appendChild(itemLi)
-
+    itemLi.appendChild(item);
+    cartItems.appendChild(itemLi);
   }
 }
 
@@ -139,8 +164,9 @@ function addToCart(item) {
   }
 
   else{
-    const cartLi = document.createElement('li')
+    const cartLi = document.createElement('li') 
     cartLi.setAttribute('id', 'cart-' + item.id)
+    cartLi.setAttribute('name', item.name)
 
   let image = document.createElement('img')
   image.src = `assets/icons/${item.id}.svg`
@@ -164,8 +190,9 @@ function addToCart(item) {
   cartLi.appendChild(addButton)
 
   increaseCost(item.id)
-
   cartItems.appendChild(cartLi)
+  state.cart.push(cartLi)
+  console.log(state.cart)
   }
 }
 
@@ -181,26 +208,24 @@ function increaseItem(id){
 
 function decreaseItem(id){
   const cartLi = document.getElementById('cart-' + id)
-  console.log(cartLi)
   const quantitySpan = cartLi.querySelector('.quantity-text')
 
   let currentQuantity = parseInt(quantitySpan.innerHTML);
   
   if(currentQuantity > 1){
-    quantitySpan.innerHTML = currentQuantity - 1
-    decreaseCost(id)
+    quantitySpan.innerHTML = currentQuantity - 1;
+    decreaseCost(id);
   }
   else {
-    cartItems.removeChild(cartLi)
-    decreaseCost(id)
 
-    renderCart()
+    let index = state.cart.findIndex(li => li.id === 'cart-'+id);
+    state.cart.splice(index, 1);
+
+    cartItems.removeChild(cartLi)
+    decreaseCost(id);
   }
 }
 
-
-
-//Id of product in state
 function increaseCost(id){
   for(let i = 0; i < state.items.length; i++){
     const item = state.items[i]
