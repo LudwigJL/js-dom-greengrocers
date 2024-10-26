@@ -4,7 +4,7 @@ const state = {
     {
       id: "001-beetroot",
       name: "beetroot",
-      price: 0.35,
+      price: 0.60,
       type: "vegetable"
     },
     {
@@ -28,7 +28,7 @@ const state = {
     {
       id: "005-avocado",
       name: "avocado",
-      price: 0.35,
+      price: 0.55,
       type: "fruit"
     },
     {
@@ -52,7 +52,7 @@ const state = {
     {
       id: "009-blueberry",
       name: "blueberry",
-      price: 0.35,
+      price: 0.40,
       type: "fruit"
     },
     {
@@ -95,23 +95,36 @@ const sortAlphabetically = document.querySelector('#sortAlpha');
 sortAlphabetically.addEventListener('change', function(e){
   if(sortAlphabetically.checked){    
 
-    const sortedArray = state.cart.sort((a, b) => {
+    const sortedArray = [...state.cart].sort((a, b) => {
       const nameA = a.getAttribute('name');
       const nameB = b.getAttribute('name');
 
       return nameA.localeCompare(nameB);      
     });
 
-    console.log(sortedArray);
-
     renderCart(sortedArray);
-
   }
   else{
-    console.log(state.cart);
-
     renderCart(state.cart);
     }
+})
+
+const sortByPrice = document.querySelector("#sortPrice");
+sortByPrice.addEventListener('change', function(e){
+
+  if(sortByPrice.checked) {
+    const sortedArray = [...state.cart].sort((a, b) => {
+      const priceA = a.getAttribute('price');
+      const priceB = b.getAttribute('price');
+
+      return priceA - priceB;
+    });
+
+    renderCart(sortedArray);
+  }
+  else{
+    renderCart(state.cart);
+  }
 })
 
 
@@ -167,6 +180,7 @@ function addToCart(item) {
     const cartLi = document.createElement('li') 
     cartLi.setAttribute('id', 'cart-' + item.id)
     cartLi.setAttribute('name', item.name)
+    cartLi.setAttribute('price', item.price)
 
   let image = document.createElement('img')
   image.src = `assets/icons/${item.id}.svg`
