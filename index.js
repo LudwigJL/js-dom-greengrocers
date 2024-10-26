@@ -4,52 +4,62 @@ const state = {
     {
       id: "001-beetroot",
       name: "beetroot",
-      price: 0.35
+      price: 0.35,
+      type: "vegetable"
     },
     {
       id: "002-carrot",
       name: "carrot",
-      price: 0.35
+      price: 0.35,
+      type: "vegetable"
     },
     {
       id: "003-apple",
       name: "apple",
-      price: 0.35
+      price: 0.35,
+      type: "fruit"
     },
     {
       id: "004-apricot",
       name: "apricot",
-      price: 0.35
+      price: 0.35,
+      type: "fruit"
     },
     {
       id: "005-avocado",
       name: "avocado",
-      price: 0.35
+      price: 0.35,
+      type: "fruit"
     },
     {
       id: "006-bananas",
       name: "bananas",
-      price: 0.35
+      price: 0.35,
+      type: "fruit"
     },
     {
       id: "007-bell-pepper",
       name: "bell pepper",
-      price: 0.35
+      price: 0.35,
+      type: "vegetable"
     },
     {
       id: "008-berry",
       name: "berry",
-      price: 0.35
+      price: 0.35,
+      type: "fruit"
     },
     {
       id: "009-blueberry",
       name: "blueberry",
-      price: 0.35
+      price: 0.35,
+      type: "fruit"
     },
     {
       id: "010-eggplant",
       name: "eggplant",
-      price: 0.35
+      price: 0.35,
+      type: "vegetable"
     }
   ],
   cart: []
@@ -71,6 +81,7 @@ function renderCart() {
   }
 }
 
+
 function renderItems() {
   allItems.innerHTML = ''
 
@@ -80,48 +91,58 @@ function renderItems() {
 
     itemLi.setAttribute('id', item.id)
     
-    //Creating image
     let image = document.createElement('img')
     image.src = `assets/icons/${item.id}.svg`
     
-    //Creating button
     let button = document.createElement('button')
     button.innerHTML = 'Add to cart'
     button.onclick = () => addToCart(item)
 
-    //append image and button to itemLi
     itemLi.appendChild(image)
     itemLi.appendChild(button)
 
-    //append item to allItems
     allItems.appendChild(itemLi)
   }
 }
 
+function renderCheckbox() {
+  const containerElem = document.createElement("div");
+
+  const checkboxElem = createCheckbox("filter");
+  checkboxElem.setAttribute("type", "checkbox");
+
+  containerElem.appendChild(checkboxElem);
+
+}
+
 function addToCart(item) {
-  const cartLi = document.createElement('li')
 
-  cartLi.setAttribute('id', 'cart-' + item.id)
+  const existingCartItem = document.getElementById('cart-' + item.id);
+  
+  if (existingCartItem) {
+    increaseItem(item.id);
+  }
 
-  //Create image
+  else{
+    const cartLi = document.createElement('li')
+    cartLi.setAttribute('id', 'cart-' + item.id)
+
   let image = document.createElement('img')
   image.src = `assets/icons/${item.id}.svg`
 
-  //Create removeButton
   let removeButton = document.createElement('button')
   removeButton.className = 'quantity-btn remove-btn center'
   removeButton.onclick = () => decreaseItem(item.id)
 
-  //Create quantitySpan
   let quantitySpan = document.createElement('span')
   quantitySpan.className = 'quantity-text center'
   quantitySpan.innerHTML = 1
 
-  //Create addButton
   let addButton = document.createElement('button')
   addButton.className = 'quantity-btn add-btn center'
   addButton.onclick = () => increaseItem(item.id);
 
+  
   cartLi.appendChild(image)
   cartLi.appendChild(removeButton)
   cartLi.appendChild(quantitySpan)
@@ -131,6 +152,7 @@ function addToCart(item) {
 
 
   cartItems.appendChild(cartLi)
+  }
 }
 
 function increaseItem(id){
