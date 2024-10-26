@@ -69,6 +69,32 @@ const allItems = document.querySelector(".store--item-list")
 const cartItems = document.querySelector(".cart--item-list")
 let totalCost = document.querySelector(".total-number")
 
+const showFruits = document.querySelector('#showFruits');
+showFruits.addEventListener('change', function(e){
+  if(showFruits.checked){
+    filterItems('fruit', state.items);
+  } 
+  else {
+    renderItems(state.items);
+    }
+});
+
+const showVegetables = document.querySelector('#showVegetables');
+showVegetables.addEventListener('change', function(e){
+  if(showVegetables.checked){
+    filterItems('vegetable', state.items);
+  }
+  else{
+    renderItems(state.items);
+  }
+})
+
+
+function filterItems(filterString, completeList){
+  const filteredList = completeList.filter(item => item.type === filterString);
+  renderItems(filteredList);
+}
+
 function renderCart() {
   cartItems.innerHTML = ''
 
@@ -81,12 +107,11 @@ function renderCart() {
   }
 }
 
-
-function renderItems() {
+function renderItems(itemsList) {
   allItems.innerHTML = ''
 
-  for(let i = 0; i < state.items.length; i++){
-    const item = state.items[i]
+  for(let i = 0; i < itemsList.length; i++){
+    const item = itemsList[i]
     const itemLi = document.createElement('li')
 
     itemLi.setAttribute('id', item.id)
@@ -103,16 +128,6 @@ function renderItems() {
 
     allItems.appendChild(itemLi)
   }
-}
-
-function renderCheckbox() {
-  const containerElem = document.createElement("div");
-
-  const checkboxElem = createCheckbox("filter");
-  checkboxElem.setAttribute("type", "checkbox");
-
-  containerElem.appendChild(checkboxElem);
-
 }
 
 function addToCart(item) {
@@ -150,10 +165,10 @@ function addToCart(item) {
 
   increaseCost(item.id)
 
-
   cartItems.appendChild(cartLi)
   }
 }
+
 
 function increaseItem(id){
   const cartLi = document.getElementById('cart-' + id)
@@ -166,6 +181,7 @@ function increaseItem(id){
 
 function decreaseItem(id){
   const cartLi = document.getElementById('cart-' + id)
+  console.log(cartLi)
   const quantitySpan = cartLi.querySelector('.quantity-text')
 
   let currentQuantity = parseInt(quantitySpan.innerHTML);
@@ -181,6 +197,8 @@ function decreaseItem(id){
     renderCart()
   }
 }
+
+
 
 //Id of product in state
 function increaseCost(id){
@@ -213,8 +231,14 @@ function decreaseCost(id){
   }
 }
 
+
+
+
+
+
+
 function main() {
-    renderItems()
+    renderItems(state.items)
     totalCost.innerText = 0
     console.log(totalCost)
 }
